@@ -1,0 +1,19 @@
+public class Solution {
+    public String minWindow(String s, String t) {
+        int[] map=new int[128];
+        for(char c:t.toCharArray()) map[c-'A']++;
+        int start=0,end=0,head=0,len=Integer.MAX_VALUE;
+        int counter=t.length();
+        while(end<s.length()){
+            if(map[s.charAt(end++)-'A']-->0) counter--;
+            while(counter==0){
+                if(end-start<len){
+                    head=start;
+                    len=end-start;
+                }
+                if(map[s.charAt(start++)-'A']++==0) counter++;
+            }
+        }
+        return len==Integer.MAX_VALUE?"":s.substring(head,head+len);
+    }
+}
