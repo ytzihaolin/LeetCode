@@ -17,7 +17,7 @@ public int maxProfit(int k, int[] prices) {
             int tmpMax =  -prices[0];
             for (int j = 1; j < len; j++) {
                 t[i][j] = Math.max(t[i][j - 1], prices[j] + tmpMax);
-                tmpMax =  Math.max(tmpMax, t[i - 1][j - 1] - prices[j]);
+                tmpMax =  Math.max(tmpMax, t[i - 1][j - 1] - prices[j]);//we don't have to sell before buy
             }
         }
         return t[k][len - 1];
