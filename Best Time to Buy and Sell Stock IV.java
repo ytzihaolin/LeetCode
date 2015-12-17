@@ -5,6 +5,8 @@ Say you have an array for which the ith element is the price of a given stock on
 Design an algorithm to find the maximum profit. You may complete at most k transactions.
 
 
+tmpMax means the maximum profit of just doing at most i-1 transactions, using at most first j-1 prices, and buying the stock at price[j] - this is used for the next loop.
+
 
 public int maxProfit(int k, int[] prices) {
         int len = prices.length;
