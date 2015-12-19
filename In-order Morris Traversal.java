@@ -29,3 +29,62 @@ public void morrisTraversal(TreeNode root){
             }
         }
     }
+
+
+
+
+
+
+//using morris traversal to solve recover binary search tree:
+Two elements of a binary search tree (BST) are swapped by mistake.
+
+Recover the tree without changing its structure.
+
+
+ public class Solution {
+    public void recoverTree(TreeNode root) {
+        TreeNode temp = null;
+        TreeNode pre=null,one=null,two=null;
+        while(root!=null){
+            if(root.left!=null){//如果有左孩子那么就将左孩子的最右leaf连接到当前节点
+                temp = root.left;
+                while(temp.right!=null && temp.right != root)//找到最右leaf
+                    temp = temp.right;
+                
+                if(temp.right!=null){
+                    
+                    temp.right = null;
+                    if(pre!=null&&(pre.val>root.val)){
+                        if(one==null){
+                            one=pre;two=root;
+                        }else{
+                            two=root;
+                        }
+                    }
+                    pre=root;
+                    root = root.right;
+                }else{//如果最右节点没有连接当前结点那么就连接然后进入左子树
+                    temp.right = root;
+                    root = root.left;
+                }
+            }else{
+                  if(pre!=null&&(pre.val>root.val)){
+                        if(one==null){
+                            one=pre;two=root;//这里handle了只有两个节点的情况，正常情况下two应该是第二次遇到不对才更新的，但是节点太少那么不会有第二次机会了
+                        }else{
+                            two=root;
+                        }
+                    }
+                pre=root;
+                root = root.right;
+            }
+        }
+        
+         if(one!= null && two!= null){
+            int t = one.val;
+            one.val = two.val;
+            two.val = t;
+        }
+        
+    }
+}
