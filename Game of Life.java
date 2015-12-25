@@ -55,4 +55,4 @@ public class Solution {
 
 for the infinite follow-up, use hashset to store coordinate of the living cell, and iterate throught them, 
 keep counters(could also use a hashset for keeping counters) for their 8 neighbors(since a cell will only be alive if it has live neighbors), and then use a 
-new set to represent future state giving counters of potiental will-be-alive cell
+new set to represent future state giving counters of potiental will-be-alive cell(i.e. cell with a counter)
