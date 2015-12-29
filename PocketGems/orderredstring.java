@@ -44,7 +44,7 @@ public String getOrderedString(String[] strs) {
         }  
     }  
    
-   Queue<Character> q=new LinkedList<Character>();
+   Queue<Character> q=new LinkedList<Character>();//change to priorityQueue if you want smallest possible result
    for(char temp:indegree.keySet()){
         if(indegree.get(temp)==0) q.offer(temp);
    }
