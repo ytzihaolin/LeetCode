@@ -33,7 +33,7 @@ class DirectedGraph{
 }
 
 public String getOrderedString(String[] strs) { 
-    DirectedGraph g = new DirectedGraph(); 
+    DirectedGraph g = new DirectedGraph(); //或者使用List<node> 来表示directedgraph，不用判断是否是否有key了
     HashMap<Character,Integer> indegree=new HashMap<Character,Integer>(); 
     for(String s:strs) {  
         if(s.isEmpty()) continue;  
