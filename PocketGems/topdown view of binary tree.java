@@ -164,3 +164,9 @@ public void bottomView()
         }
     }
 }
+
+
+
+side view of binary tree
+
+level order BFS and also add a vd variable inside of the QItem class

@@ -32,7 +32,7 @@ public class MonkeyProblem {
   
     private static int[][] dir = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};  
     public static int countSteps(int k) {  
-        Set<Point> set = new HashSet<>();  
+        Set<Point> set = new HashSet<>(); 
         Queue<Point> queue = new LinkedList<>();  
         queue.offer(new Point(0, 0));  
         while(!queue.isEmpty()) {  
