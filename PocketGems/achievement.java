@@ -8,6 +8,10 @@ interface reward{
 
 class Player{
 	int lvl;
+	HashSet<reward> rewardlist;
+	Player(){
+		this.rewardlist=new HashSet<reward>();
+	}
 }
 
 class reachlvlreq implements requirement{
@@ -32,5 +36,5 @@ class Achievement{
 		this.rewardlist=null;
 	}
 
-	
+
 }
