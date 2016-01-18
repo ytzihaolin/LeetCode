@@ -1,44 +1,25 @@
-import java.util.*;
-import java.io.*;
-
-
-public class combinationsum{
-    
-  
-    public static void main(String[] args) {
-        combinationsum sol=new combinationsum();
-        
-        sol.test();
-    }
-
-    public void test(){
-      
-       sl(4);
-    }
-
-    public void sl(int n){
-       List<List<Integer>> res=new ArrayList<List<Integer>>();
-       helper(res,new ArrayList<Integer>(),0,n);
-       for(List<Integer> a:res){
-        for(int b:a){
-          System.out.print(b+" ");
+public class Solution {
+    int start,maxlen;
+    public String longestPalindrome(String s) {
+        if(s=="") return "";
+        start=0;
+        maxlen=1;
+        for(int i=0;i<s.length()-1;i++){
+            grow(s,i,i);
+            grow(s,i,i+1);
         }
-        System.out.println();
-       }
+        return s.substring(start,start+maxlen);
     }
-
-    public void helper(List<List<Integer>> res, ArrayList<Integer> list, int sum, int t){
-      if(sum>t) return;
-      if(sum==t){
-        res.add(new ArrayList<Integer>(list));
-        return;
-      }
-      for(int i=1;i<t;i++){
-        list.add(i);
-        helper(res,list,sum+i,t);
-        list.remove(list.size()-1);
-      }
+    
+    private void grow(String s,int a,int b){
+        char[] ss=s.toCharArray();
+        while(a>=0&&b<s.length()&&ss[a]==ss[b]){
+              if(b-a+1>maxlen){
+                maxlen=b-a+1;
+                start=a;
+               }
+            a--;
+            b++;
+        }
     }
 }
-
-
