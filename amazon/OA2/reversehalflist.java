@@ -19,3 +19,28 @@ public static JNode reorder2(JNode head) {
     }
     return head;
   }
+
+
+//my style
+  public CNode Solution(CNode head) {
+        if (head == null || head.next == null || head.next.next ==null) {
+            return head;
+        }
+        CNode fast = head.next;
+        CNode slow = head;
+        while (fast.next != null && fast.next.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        CNode firstTail = slow;
+        CNode cur=slow.next;
+        CNode newHead=null;
+        while (cur != null) {
+            CNode next = cur.next;
+            cur.next=newHead;
+            newHead=cur;
+            cur=next;
+        }
+        firstTail.next=newHead;
+        return head;
+    }

@@ -17,3 +17,18 @@
       }
       return count;
   }
+
+
+public int cal(int[] a, int t){
+    if(a==null||a.length==0||t<=0) return 0;   
+    ArrayList<Integer> list=new ArrayList<Integer>();
+    int count=0;
+    for(int n:a){
+        int index=list.indexOf(n);
+        if(index==-1) count++;
+        else list.remove(index);
+        list.add(n);
+        if(list.size()>t) list.remove(0);
+    }
+    return count;
+  }
