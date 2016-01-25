@@ -210,3 +210,138 @@ return [9, 8, 6, 5, 3]
 
 	2）都没到达队尾，选最后不等位置最大的指针）
 4. 在所有结果中比较出最大的
+
+
+
+30. Substring with Concatenation of All Words 
+You are given a string, s, and a list of words, words, that are all of the same length. Find all starting indices of substring(s) in s that is a concatenation of each word in words exactly once and without any intervening characters.
+
+For example, given:
+s: "barfoothefoobarman"
+words: ["foo", "bar"]
+
+You should return the indices: [0,9].
+
+使用hashmap<word,occrrance>，由于每个字符长度相等，就用brutalforce即可， 注意每次循环开始复制hashmap
+找到一个word remove一个，最后一map.isEmpty()来判断。 而不是找到一个+1， 最后map.equals判断，否则会出问题
+
+
+
+218. The Skyline Problem
+The geometric information of each building is represented by a triplet of integers [Li, Ri, Hi], where Li and Ri are the x coordinates of the left and right edge of the ith building, respectively, and Hi is its height
+
+两个数据结构，
+1）priorityqueue存储point(x,y)，可以用Hi,-Hi来区别一个楼的左上角和右上角。排序优先x小的, 其次y高的
+2) treemap，记录每个Hi(即y)现在出现的次数，每次新遇到一个point的时候更新，可以getlastentry().getkey()取得当前最高Hi值，
+   从priorityqueue中poll出的点存到结果当中的时候Hi使用当前最高的值（注意，只有poll出一个点且poll完更新height后当前maxheight改变的时候才记录结果）
+
+
+
+76. Minimum Window Substring
+Given a string S and a string T, find the minimum window in S which will contain all the characters in T in complexity O(n).
+
+For example,
+S = "ADOBECODEBANC"
+T = "ABC"
+Minimum window is "BANC".
+
+典型substring problem， 套用双指针模板即可。
+
+start=0, end=0;
+for();//初始化判定标准，此处可以使用map来map字符出现次数
+while(end<length){
+	利用s.charAt(end++) 改变 map//利用s.charAt(end)改变判定标准
+	if(符合了某个判定标准）{
+		while(符合判定判定标准&&start<end){//在符合某一标准的情况下移动start直到再次打破标准
+			利用s.charAt(start++) 改变 map;
+			同时比较当前状态更新最后结果
+		}
+	}
+}
+
+
+132. Palindrome Partitioning II 
+Given a string s, partition s such that every substring of the partition is a palindrome.
+Return the minimum cuts needed for a palindrome partitioning of s.
+
+For example, given s = "aab",
+Return 1 since the palindrome partitioning ["aa","b"] could be produced using 1 cut.
+
+dp问题，
+for(i=1:len){
+	for(j=i-1:0){//可在此处更新ispalindrome(j,i)
+		if(substring(j,i) is palindrome) dp(i)=min{dp[j]+1,dp[i]}
+	}
+}//注意，判断substring是否palindrome也在dp循环中一点一点建立的
+
+
+
+
+135. Candy 
+There are N children standing in a line. Each child is assigned a rating value.
+You are giving candies to these children subjected to the following requirements:
+
+Each child must have at least one candy.
+Children with a higher rating get more candies than their neighbors.
+What is the minimum candies you must give?
+
+先从左向右保证rating高的比左边拿的多一个，再从右向左，保证rating高的比右边拿的多至少一个。最后求和
+
+
+
+
+
+97. Interleaving String 
+Given s1, s2, s3, find whether s3 is formed by the interleaving of s1 and s2.
+
+For example,
+Given:
+s1 = "aabcc",
+s2 = "dbbca",
+
+When s3 = "aadbbcbcac", return true.
+When s3 = "aadbbbaccc", return false.
+
+二维dp，dp[i][j]=true意味着s3.substring(0,i+j)是s1.substring(0，i)和s2.substring(0,j)以某种方式交叉的,注意因为存在s1,s2一个字符都没有的情况
+所以dp[s1.length+1][s2.length+1]进行声明，dp[0][0]=true,表示两边都不贡献字符
+状态方程dp[i][j]=(dp[i-1][j]&&s2.charAt(i-1)==s3.charAt(i+j-1))||(dp[i][j-1]&&s3.charAt(j-1)==s3.charAt(i+j-1))
+基态即只对一个字符进行判断看是否由其组成
+
+
+
+
+32. Longest Valid Parentheses 
+Given a string containing just the characters '(' and ')', find the length of the longest valid (well-formed) parentheses substring.
+
+For "(()", the longest valid parentheses substring is "()", which has length = 2.
+
+Another example is ")()())", where the longest valid parentheses substring is "()()", which has length = 4.
+
+dp, dp[i]表示终止于i位置的最长串长度，如果charAt(i)==')',则有两种情况
+1）charAt(i-1)=='(', dp[i]=dp[i-2]+2;
+2) ...........!='(' : (1). charAt(i-dp[i-1]-1)==')': dp[i]=dp[i-1]+2+dp[i-dp[i-1]-2]//!....(.....)!
+					  (2). charAt(i-dp[i-1]-1)!=')': 0;
+
+
+
+
+
+
+282. Expression Add Operators 
+Given a string that contains only digits 0-9 and a target value, return all possibilities to add binary operators (not unary) +, -, or * between the digits so they evaluate to the target value.
+
+Examples: 
+"123", 6 -> ["1+2+3", "1*2*3"] 
+"232", 8 -> ["2*3+2", "2+3*2"]
+"105", 5 -> ["1*0+5","10-5"]
+"00", 0 -> ["0+0", "0-0", "0*0"]
+"3456237490", 9191 -> []
+
+
+dfs backtracking问题，每个位置三个走路方向（+，-，*）， 注意传入dfs函数中的参数需要currentvalue，和multiplytemp。
+multiplytemp=1.val 当当前数字位前为+号
+			 2.-val 当当前数字位前为-号
+			 3.multiplytemp*val，当当前位前为*号
+currentvalue=1. currentvalue+val
+		     2. currentvalue-val
+		     3. currentvalue-multiplytemp+multiplytemp*val//此处为关键
