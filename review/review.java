@@ -636,3 +636,221 @@ dp题，真头大啊。
         }
     }
 base case 是，所有s子串都包含1个空串即mem[0][i]=1;
+
+
+
+
+
+301. Remove Invalid Parentheses 
+Remove the minimum number of invalid parentheses in order to make the input string valid. Return all possible results.
+
+Note: The input string may contain letters other than the parentheses ( and ).
+Examples:
+"()())()" -> ["()()()", "(())()"]
+"(a)())()" -> ["(a)()()", "(a())()"]
+")(" -> [""]
+
+
+brutal force,使用BFS遍历所有可能，单独写一个isValid函数判断每次遍历到的是否成功，level control实现最短。
+
+
+
+
+
+
+312. Burst Balloons My Submissions Question
+Total Accepted: 4376 Total Submissions: 13205 Difficulty: Hard
+Given n balloons, indexed from 0 to n-1. Each balloon is painted with a number on it represented by array nums. You are asked to burst all the balloons. If the you burst balloon i you will get nums[left] * nums[i] * nums[right] coins. Here left and right are adjacent indices of i. After the burst, the left and right then becomes adjacent.
+
+Find the maximum coins you can collect by bursting the balloons wisely.
+
+Note: 
+(1) You may imagine nums[-1] = nums[n] = 1. They are not real therefore you can not burst them.
+(2) 0 ≤ n ≤ 500, 0 ≤ nums[i] ≤ 100
+
+Example:
+
+Given [3, 1, 5, 8]
+
+Return 167
+
+    nums = [3,1,5,8] --> [3,5,8] -->   [3,8]   -->  [8]  --> []
+   coins =  3*1*5      +  3*5*8    +  1*3*8      + 1*8*1   = 167
+
+
+
+DP问题，dp[i][j]=max coin when burst i to j;
+dp[i][j]=max{dp[i][j],dp[i][mid-1]+num[mid]*nums[i-1]*num[j+1]+dp[mid+1][j]};//mid表示i to j中最后扎破的气球
+注意的一点是，上面的状态转换公式需要考虑边界条件，mid-1<0和mid+1>=len的情况。
+
+
+
+
+
+
+
+
+117. Populating Next Right Pointers in Each Node II 
+Follow up for problem "Populating Next Right Pointers in Each Node".
+
+What if the given tree could be any binary tree? Would your previous solution still work?
+
+Note:
+
+You may only use constant extra space.
+For example,
+Given the following binary tree,
+         1
+       /  \
+      2    3
+     / \    \
+    4   5    7
+After calling your function, the tree should look like:
+         1 -> NULL
+       /  \
+      2 -> 3 -> NULL
+     / \    \
+    4-> 5 -> 7 -> NULL
+
+
+
+ 建立三个TreeNode变量：cur, head, pre;
+ 1. cur为pre cursor上一层的父节点层，因为该层next已经设置好，所以可以作为引导指针前进。通过两个while(cur!=null) 控制循环，外层为总遍历，内层为层遍历。
+ 2. head记录当前设置next的子节点层左边第一个节点。
+ 3. pre当前设置next的子节点层的cursor，用于建立next指针。
+ 当每层遍历结束后head，pre置null，cur置head，相当于cur下移一层。
+ 每次判断cur子节点的时候，如果head==null说明刚进入新层，此时更新head=子节点，pre=head；否则只管pre cursor在子节点层移动和cur
+ cursor在父节点层移动。直到cur走到最右。
+
+
+
+
+
+
+
+42. Trapping Rain Water
+Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it is able to trap after raining.
+
+For example, 
+Given [0,1,0,2,1,0,1,3,2,1,2,1], return 6.
+
+
+首先确定左右两个边界，即递增序列的最后一个，因为从边界开始的递增数列无法储水。
+然后从两个边界中找到较小的一个，向另一个边界扫描并计算储水，直到找到比其大的隔板，更新两个边界，然后循环上述过程直到两个边界相遇
+
+
+
+
+
+
+128. Longest Consecutive Sequence 
+Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
+
+For example,
+Given [100, 4, 200, 1, 3, 2],
+The longest consecutive elements sequence is [1, 2, 3, 4]. Return its length: 4.
+
+Your algorithm should run in O(n) complexity.
+
+
+use hashmap to store number as key and the longest sequence ends or start at it as value.
+scan through the array and update longest sequence by checking sequence value of the left element and right element 
+
+
+
+
+
+145. Iterative Binary Tree Pre-In-Postorder Traversal
+ 
+ Inorder: cur记录当前遍历到的节点，下一次循环先将当前所在节点所有左孩子push进去，然后pop出一个元素，记录，进入pop元素的右孩子
+
+ 	1. push所有左孩子
+ 	2. pop出节点并记录
+ 	3. 进入右孩子
+ 	stack.push(root);
+ 	cur=root;
+ 	while(cur!=null || !stack.empty()){
+        while(cur!=null){
+            stack.add(cur);
+            cur = cur.left;
+        }
+        cur = stack.pop();
+        list.add(cur.val);
+        cur = cur.right;
+    }
+
+
+ Preorder：类似递归，先push right，后push left。
+
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        stack.push(root);
+        while(!stack.empty()) {
+            TreeNode node = stack.pop();
+            list.add(node.val);
+            if(node.right!=null) stack.push(node.right);
+            if(node.left!=null) satck.push(node.left);
+        }
+
+
+Postorder: 和preorder几乎一样，只是add(0,val)，先push left后push right
+
+
+
+
+
+
+
+287. Find the Duplicate Number 
+Given an array nums containing n + 1 integers where each integer is between 1 and n (inclusive), prove that at least one duplicate number must exist. Assume that there is only one duplicate number, find the duplicate one.
+
+Note:
+You must not modify the array (assume the array is read only).
+You must use only constant, O(1) extra space.
+Your runtime complexity should be less than O(n2).
+There is only one duplicate number in the array, but it could be repeated more than once.
+
+
+
+fast slow pointer方法，和检查linkedlist cycle的问题相同，当快慢pointer相遇的时候,将一个pointer重新指向head，
+此时两个pointer一次移动一步，相遇点即为entry point，也即duplicate number；
+
+此题的head=0；
+slow=head;
+fast=head;
+while(fast!=null&&fast.next!=null){//while 条件在保证有cycle的情况下可以不加
+	fast=fast.next.next;
+	slow=slow.next;
+	if(fast==slow) break;
+}//此时fast，slow在meeting point，但非entry point
+
+
+
+
+
+
+
+330. Patching Array 
+Given a sorted positive integer array nums and an integer n, add/patch elements to the array such that any number in range [1, n] inclusive can be formed by the sum of some elements in the array. Return the minimum number of patches required.
+
+Example 1:
+nums = [1, 3], n = 6
+Return 1.
+
+Combinations of nums are [1], [3], [1,3], which form possible sums of: 1, 3, 4.
+Now if we add/patch 2 to nums, the combinations are: [1], [2], [3], [1,3], [2,3], [1,2,3].
+Possible sums are 1, 2, 3, 4, 5, 6, which now covers the range [1, 6].
+So we only need 1 patch.
+
+Example 2:
+nums = [1, 5, 10], n = 20
+Return 2.
+The two patches can be [2, 4].
+
+Example 3:
+nums = [1, 2, 2], n = 5
+Return 0.
+
+greedy:
+第一想法是存hashmap，把能加到的数存起来，然后从小到大补漏，补得同时更新能加到的数。
+更好的方法是greedy，类似max leap，扫数组并维持能到达的最大边界。如果数组元素小于该边界那么不添加元素，只更新新的最大边界（+currentnum)，如果数组元素大于该边界，
+那么意味着要增加该边界+1这个数，同时边界*2.  最大边界达到所求之上的时候返回count即可
