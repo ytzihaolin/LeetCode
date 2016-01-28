@@ -1,0 +1,96 @@
+This is question3, I use HTML and Javascript with google visualization library to create a simple calendar.
+
+
+
+
+
+
+<html>
+  <head> 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+       var chart;//using google visualiztion API to draw the calendar
+       var dataTable;
+       var jsonstr;
+       google.charts.load("current", {packages:["calendar"]});
+       google.charts.setOnLoadCallback(drawChart);
+       function drawChart() {
+
+        jsonstr={
+                "events": [
+                  {
+                    "occasion": "Birthday party",
+                    "invited_count": 120,
+                    "year": 2016,
+                    "month": 2,
+                    "day": 14
+                  },
+                  {
+                    "occasion": "Technical discussion",
+                    "invited_count": 23,
+                    "year": 2016,
+                    "month": 11,
+                    "day": 24
+                  },
+                  {
+                    "occasion": "Press release",
+                    "invited_count": 64,
+                    "year": 2015,
+                    "month": 12,
+                    "day": 17,
+                    "cancelled": true
+                  },
+                  {
+                    "occasion": "New year party",
+                    "invited_count": 55,
+                    "year": 2016,
+                    "month": 1,
+                    "day": 1
+                  }
+                ]
+                };//I hard-coded this json, since it's small, otherwise we could upload the json into AWS buckets to give accesss;
+          
+           dataTable = new google.visualization.DataTable();
+           dataTable.addColumn({ type: 'date', id: 'Date' ,name:'name'});
+           dataTable.addColumn({ type: 'number', id: 'id' });//cell contains date and id to retrive data from json when click
+           for(var i = 0; i < jsonstr.events.length; i++) {
+                var obj = jsonstr.events[i];
+                dataTable.addRow([new Date(parseInt(obj.year),parseInt(obj.month),parseInt(obj.day)),i]);
+            }
+           chart = new google.visualization.Calendar(document.getElementById('calendar_basic'));
+
+           var options = {
+             title: "Events: click to see details",
+             height: 350,
+             calendar: { cellSize: 20 },
+             monthOutlineColor: {
+              stroke: 'blue',
+              strokeOpacity: 0.8,
+              strokeWidth: 2
+            }
+           };
+           google.visualization.events.addListener(chart, 'select', selectHandler);//add event listener to show details
+           chart.draw(dataTable, options);
+       }
+
+      function selectHandler() { 
+          var message="";
+          if(chart.getSelection()[0].row==null) alert("No Event Today");
+          else{
+            var id= dataTable.getValue(chart.getSelection()[0].row, 1);
+            if(id>=0&&id<jsonstr.events.length){
+            message+="Occassion: "+ jsonstr.events[id].occasion+"  ";
+            message+="invited_count: "+jsonstr.events[id].invited_count+"  ";
+            if(jsonstr.events[id].cancelled==true) message="sorry, event has been cancelled";      
+            window.alert(message);
+            }
+          }
+          window.location.reload();
+      }
+
+    </script>
+  </head>
+  <body>
+    <div id="calendar_basic" style="width: 1500px; height: 350px;"></div>
+  </body>
+</html>

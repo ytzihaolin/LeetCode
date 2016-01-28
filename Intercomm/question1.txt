@@ -1,0 +1,8 @@
+What's your proudest achievement? It can be a personal project or something you've worked on professionally. Just a short paragraph is fine, but I'd love to know why you're proud of it.
+
+
+My proudest achievement is to build an Android application "AroudU" with my friends. 
+
+This is a coursework project, it collects data from user updates as well as social platform stream like twitter and facebook, analysize the big data and genrate topics among the collected data then push notification to end users to let them know what's going on nearby.
+
+The reason why I feel this is the proudest achievement is that this is my first time ever evolved int web application development, everything has to be learned by myself. since I'm in charge of the backend logic and database design, and the timeline is in final week of school, the workload is pretty large. But I managed to conquer the difficults and learned a lot, and successfully finished the work. And in the process I found that I really enjoy working in a team and brainstorming with each other, ever since then, I never feel discouraged when I encounter something new, I know I can handle the challenge and make myself stronger. 
