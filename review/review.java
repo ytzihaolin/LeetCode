@@ -39,6 +39,25 @@ Count of Smaller Numbers After Self
 You are given an integer array nums and you have to return a new counts array. The counts array has the property where counts[i] is the number of smaller elements to the right of nums[i].
 
 利用arraylist, 从后面向前面扫，维持一个扫到过的数据排序数组，查找当前元素在其中的index，该index即为所求;
+注意点是findindex函数需要细分情况
+
+private int findIndex(List<Integer> sorted, int target) {
+    if (sorted.size() == 0) return 0;
+    int start = 0;
+    int end = sorted.size() - 1;
+    if (sorted.get(end) < target) return end + 1;
+    if (sorted.get(start) >= target) return 0;
+    while (start + 1 < end) {
+        int mid = start + (end - start) / 2;
+        if (sorted.get(mid) < target) {
+            start = mid + 1;
+        } else {
+            end = mid;
+        }
+    }
+    if (sorted.get(start) >= target) return start;
+    return end;
+}
 
 
 
