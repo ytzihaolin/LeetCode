@@ -99,7 +99,7 @@ set(key, value) - Set or insert the value if the key is not already present. Whe
 此处的思路完全相同，稍微复杂一点，可以使用doublelinkedlist，每次查找或set某个key时，先删除，后插入，保证插入位置在队尾。
 超过size从队头删除。
 注意，删除的时候需要知道index，可以使用hashmap保存，也可遍历查找（arraylist.indexOf)，使用dlinkedlist的好处是
-可以自己写删除操作，比较方便。
+可以自己写删除操作，比较方便。注意删除的时候同时需要在hashmap出也删除，此处可以多维持一个hashmap用来存放node->key，也可在设计dlist的时候直接将key存在dlist中
 
 还有一种方法，使用已有data structure linkedhashmap， 其中有自动的remove oldest方法，我们不需要自己写
 import java.util.LinkedHashMap;
@@ -873,3 +873,151 @@ greedy:
 第一想法是存hashmap，把能加到的数存起来，然后从小到大补漏，补得同时更新能加到的数。
 更好的方法是greedy，类似max leap，扫数组并维持能到达的最大边界。如果数组元素小于该边界那么不添加元素，只更新新的最大边界（+currentnum)，如果数组元素大于该边界，
 那么意味着要增加该边界+1这个数，同时边界*2.  最大边界达到所求之上的时候返回count即可
+
+
+
+
+
+
+
+implement segment tree
+307. Range Sum Query - Mutable
+Given an integer array nums, find the sum of the elements between indices i and j (i ≤ j), inclusive.
+
+The update(i, val) function modifies nums by updating the element at index i to val.
+
+
+关键： buildtree(int[] a, int start, int end){
+	if(start>end) return null;
+	if(start==end) return new stree(start,end);
+	stree root=new stree(start, end);
+	root.left=buildtree(a,start,mid);
+	root.right=buildtree(a,mid+1,end);
+	return root;
+}
+
+
+
+
+
+
+implement trie
+208. Implement Trie (Prefix Tree) 
+Implement a trie with insert, search, and startsWith methods.
+
+
+可以使用trienode[]建child，也可以使用hashmap<Character,TrieNode>建立child。
+推荐hashmap，方便快捷
+
+
+
+
+
+
+73. Set Matrix Zeroes 
+Given a m x n matrix, if an element is 0, set its entire row and column to 0. Do it in place.
+
+以第一列和第一行作为存储状态的单元。row=0：rlength，那么col=1:clength；
+单独用col0flag记录第一列是否需要置零。
+注意如果col从1开始，row从0开始，那么最后遍历置0的时候需要row从最后到0，不然0row先置0了其他全为0
+public void setZeroes(int[][] matrix) {
+        if(matrix==null||matrix.length==0) return;
+        int col0=1;
+        for(int i=0;i<matrix.length;i++){
+            if(matrix[i][0]==0) col0=0;
+            for(int j=1;j<matrix[0].length;j++){
+                if(matrix[i][j]==0){
+                    matrix[0][j]=0;
+                    matrix[i][0]=0;
+                }
+            }
+        }
+        
+        for(int i=matrix.length-1;i>=0;i--){//必须的
+            for(int j=matrix[0].length-1;j>=1;j--){
+                 if(matrix[i][0]==0||matrix[0][j]==0) matrix[i][j]=0;
+            }
+            if(col0==0) matrix[i][0]=0;
+        }
+    }
+
+
+
+
+166. Fraction to Recurring Decimal My Submissions Question
+Total Accepted: 25679 Total Submissions: 177983 Difficulty: Medium
+Given two integers representing the numerator and denominator of a fraction, return the fraction in string format.
+
+If the fractional part is repeating, enclose the repeating part in parentheses.
+
+For example,
+
+Given numerator = 1, denominator = 2, return "0.5".
+Given numerator = 2, denominator = 1, return "2".
+Given numerator = 2, denominator = 3, return "0.(6)".
+
+先判断正负，取绝对值后计算，整数部分好计算，小数部分每次余数乘10再算。其余和整数相同，对于循环的处理，维持一个hashmap，记录
+小数部分每次得到的余数和append结果的index对应关系，如果哪一步得到的余数存在过，那么就在记录的index位置插入'(',最后插入')'即可。
+
+
+
+
+
+29. Divide Two Integers My Submissions Question
+Total Accepted: 58449 Total Submissions: 379993 Difficulty: Medium
+Divide two integers without using multiplication, division and mod operator.
+
+If it is overflow, return MAX_INT.
+
+同样先判断正负问题，此处乘积二分法，sum=分母，sum持续乘2，记录sum的倍数，直到超过分子，然后递归求（分母-sum）即剩下的部分除以分子的结果。
+base case为分子小于分母，则返回0；
+
+
+
+151. Reverse Words in a String My Submissions Question
+Total Accepted: 89425 Total Submissions: 575084 Difficulty: Medium
+Given an input string, reverse the string word by word.
+
+For example,
+Given s = "the sky is blue",
+return "blue is sky the".
+
+1. split分解，然后stringbuilder逆序append
+2. 先反转整个s，然后按单个word反转
+
+
+
+
+
+
+91. Decode Ways My Submissions Question
+Total Accepted: 60129 Total Submissions: 352763 Difficulty: Medium
+A message containing letters from A-Z is being encoded to numbers using the following mapping:
+
+'A' -> 1
+'B' -> 2
+...
+'Z' -> 26
+Given an encoded message containing digits, determine the total number of ways to decode it.
+
+For example,
+Given encoded message "12", it could be decoded as "AB" (1 2) or "L" (12).
+
+The number of ways decoding "12" is 2.
+
+
+dp问题，从前向后建立dp的话。dp[i]依赖于dp[i-1]和dp[i-2]。下面两部之前，如果当前位=='0'，那么dp[i-1]先置0；
+1. substring(i-1,i+1)(即当前位与前一位组合成的数字)在26以内 dp[i]=dp[i-1]+dp[i-2]
+2. 否则，dp[i]=dp[i-1];
+
+
+		int[] dp=new int[len+1];
+        dp[0]=1;
+        dp[1]=1;
+        for(int i=2;i<=len;i++){
+           if(s.charAt(i-1)=='0') dp[i-1]=0;
+           dp[i]=(Integer.parseInt(s.substring(i-2,i))<=26)?dp[i-2]+dp[i-1]:dp[i-1];
+        }
+        return dp[len];
+
+从后向前扫就不用首先dp[i-1]判断置零了，当前位为零直接跳过即可。
