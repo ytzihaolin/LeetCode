@@ -1021,3 +1021,20 @@ dp问题，从前向后建立dp的话。dp[i]依赖于dp[i-1]和dp[i-2]。下面
         return dp[len];
 
 从后向前扫就不用首先dp[i-1]判断置零了，当前位为零直接跳过即可。
+
+
+
+
+
+
+
+
+4. Median of Two Sorted Arrays My Submissions Question
+Total Accepted: 81804 Total Submissions: 453266 Difficulty: Hard
+There are two sorted arrays nums1 and nums2 of size m and n respectively. Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).
+
+建一个函数，find Kth in two sorted array， 那么这里k=(len1+len2)/2；
+函数中，arrayA, arrayB分别找第k/2的元素（超出范围的话自动选没超出的那个去除），然后相比，小的那个数组就可以将前k/2个元素除掉（即下次递归改变start index），进而递归调用寻找k=k/2；
+basecase是：
+1. 有一个数组的start index超过上限，那么直接在第二个数组中找第k个就可以。
+2. k==1,返回两个数组从各自start index首元素调最小的即可
