@@ -1331,3 +1331,248 @@ return [3, 4]
 
 
 最多只有两个root，首先找到叶子节点（邻居只有一个的），然后向内遍历（将叶子的邻居去掉叶子，然后看去掉后的邻居数是否为1，是则为新的叶子），直到剩下少于3个及节点
+
+
+
+
+
+
+
+
+
+297. Serialize and Deserialize Binary Tree
+
+
+preorder serialize, 遇到null节点'X'代替，因为有X，所以不需要inorder来判断子树数列的范围。
+deserialize的时候用queue解决，serilize，deserilize都是先left后right
+
+
+
+
+
+
+
+
+264. Ugly Number II My Submissions Question
+Total Accepted: 22529 Total Submissions: 85587 Difficulty: Medium
+Write a program to find the n-th ugly number.
+
+Ugly numbers are positive numbers whose prime factors only include 2, 3, 5. For example, 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 is the sequence of the first 10 ugly numbers.
+
+Note that 1 is typically treated as an ugly number.
+
+
+dp从头开始build， 单独三个pointer指向对应位置，每次*num后取最小的，注意乘了以后需要移动pointer，不能用else if分级判断
+因为可能同时两个因子同时得到当前值，所以都需要移动
+
+
+
+
+
+134. Gas Station My Submissions Question
+Total Accepted: 55781 Total Submissions: 207919 Difficulty: Medium
+There are N gas stations along a circular route, where the amount of gas at station i is gas[i].
+
+You have a car with an unlimited gas tank and it costs cost[i] of gas to travel from station i to its next station (i+1). You begin the journey with an empty tank at one of the gas stations.
+
+Return the starting gas stations index if you can travel around the circuit once, otherwise return -1；
+
+
+一个总要的原则，如果总gas>总cost，那么一定有一个位置可以实现环绕（否则从gap过不去的下一个加油站上车，那么到gap前一定得到总gas，那么一定能过这个gap）
+所以只要一直保持记录一个start，不行就换，转一圈以后如果有解那么必定能得到
+
+
+
+
+
+
+
+274. H-Index My Submissions Question
+Total Accepted: 24800 Total Submissions: 87091 Difficulty: Medium
+Given an array of citations (each citation is a non-negative integer) of a researcher, write a function to compute the researchers h-index.
+
+According to the definition of h-index on Wikipedia: "A scientist has index h if h of his/her N papers have at least h citations each, and the other N − h papers have no more than h citations each."
+
+For example, given citations = [3, 0, 6, 1, 5], which means the researcher has 5 papers in total and each of them had received 3, 0, 6, 1, 5 citations respectively. Since the researcher has 3 papers with at least 3 citations each and the remaining two with no more than 3 citations each, his h-index is 3.
+
+Note: If there are several possible values for h, the maximum one is taken as the h-index.
+
+
+
+另建一个数组，index表示citation数，value表示有此citation数的paper数，然后从后向前统计遇到的paper数，这些paper ciatation数都比当前
+index多，找到sum>=index的第一个index即所求Hindex
+
+
+
+
+
+
+
+
+236. Lowest Common Ancestor of a Binary Tree My Submissions Question
+Total Accepted: 32512 Total Submissions: 114144 Difficulty: Medium
+Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.
+
+According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes v and w as the lowest node in T that has both v and w as descendants (where we allow a node to be a descendant of itself).”
+
+        _______3______
+       /              \
+    ___5__          ___1__
+   /      \        /      \
+   6      _2       0       8
+         /  \
+         7   4
+For example, the lowest common ancestor (LCA) of nodes 5 and 1 is 3. Another example is LCA of nodes 5 and 4 is 5, since a node can be a descendant of itself according to the LCA definition.
+
+
+
+递归很简单，分别求root.left,root.right作为root时两个节点的lca，如果有一个为null则在另一边，两个都不为null则为root，都为null则为null
+base case为root==null或root==两个节点之一
+
+
+
+
+
+
+
+95. Unique Binary Search Trees II My Submissions Question
+Total Accepted: 49221 Total Submissions: 170917 Difficulty: Medium
+Given n, generate all structurally unique BST (binary search trees) that store values 1...n.
+
+和普通的递归方法解permutation差不多，对于递归函数，1-n每一个值都可以作为root val， 然后该值两边的递归生成list<treenode>的树根，遍历组合left，right即可
+
+
+
+
+
+
+
+120. Triangle My Submissions Question
+Total Accepted: 62121 Total Submissions: 211957 Difficulty: Medium
+Given a triangle, find the minimum path sum from top to bottom. Each step you may move to adjacent numbers on the row below.
+
+For example, given the following triangle
+[
+     [2],
+    [3,4],
+   [6,5,7],
+  [4,1,8,3]
+]
+The minimum path sum from top to bottom is 11 (i.e., 2 + 3 + 5 + 1 = 11).
+
+从下向上做dp
+
+
+
+
+
+
+
+201. Bitwise AND of Numbers Range My Submissions Question
+Total Accepted: 28406 Total Submissions: 97495 Difficulty: Medium
+Given a range [m, n] where 0 <= m <= n <= 2147483647, return the bitwise AND of all numbers in this range, inclusive.
+
+For example, given the range [5, 7], you should return 4.
+
+
+每一位看，都shift到最左，只要此时m!=n， 那么必然有奇偶的数，AND后最后一位必然为0，此时可以忽略，剩下的shift左一位继续前面的步骤，直到m==n，那么必然
+AND后每一位都为原数，此时需要记录原来过程中shift过的位数，那么再shift左那么多位数即可。
+
+
+
+
+
+
+329. Longest Increasing Path in a Matrix My Submissions Question
+Total Accepted: 5323 Total Submissions: 17902 Difficulty: Medium
+Given an integer matrix, find the length of the longest increasing path.
+
+From each cell, you can either move to four directions: left, right, up or down. You may NOT move diagonally or move outside of the boundary (i.e. wrap-around is not allowed).
+
+Example 1:
+
+nums = [
+  [9,9,4],
+  [6,6,8],
+  [2,1,1]
+]
+Return 4
+The longest increasing path is [1, 2, 6, 9].
+
+Example 2:
+
+nums = [
+  [3,4,5],
+  [3,2,6],
+  [2,2,1]
+]
+Return 4
+The longest increasing path is [3, 4, 5, 6]. Moving diagonally is not allowed.
+
+就是很简单的dfs，但是需要cache一下，每一个点cache从此处向四个方向外走的最长路径长度，每次dfs到已有cache的位置直接返回，不需要再计算。
+
+
+
+
+
+
+
+
+
+279. Perfect Squares My Submissions Question
+Total Accepted: 24670 Total Submissions: 79065 Difficulty: Medium
+Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
+
+For example, given n = 12, return 3 because 12 = 4 + 4 + 4; given n = 13, return 2 because 13 = 4 + 9.
+
+
+
+dp，从头每个数都以其为基准向上加平方数，更新dp数组
+
+
+
+
+
+
+
+
+215. Kth Largest Element in an Array My Submissions Question
+Total Accepted: 41189 Total Submissions: 130525 Difficulty: Medium
+Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
+
+For example,
+Given [3,2,1,5,6,4] and k = 2, return 5.
+
+quick select, 每次像quicksort一样partition array，然后看partition每一边元素有几个，如果正好有k个那么pivot就是所找的元素，否则根据大小关系继续
+partition某一part
+
+
+
+
+
+
+
+241. Different Ways to Add Parentheses My Submissions Question
+Total Accepted: 16423 Total Submissions: 50301 Difficulty: Medium
+Given a string of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. The valid operators are +, - and *.
+
+
+Example 1
+Input: "2-1-1".
+
+((2-1)-1) = 0
+(2-(1-1)) = 2
+Output: [0, 2]
+
+
+Example 2
+Input: "2*3-4*5"
+
+(2*(3-(4*5))) = -34
+((2*3)-(4*5)) = -14
+((2*(3-4))*5) = -10
+(2*((3-4)*5)) = -10
+(((2*3)-4)*5) = 10
+Output: [-34, -14, -10, -10, 10]
+
+不需要把所有可能式子列出来，只需要以运算符号为分隔（即意味着在其两边加括号，为一种加括号方式），分别计算两边表达式可能结果，然后进行组合即可。注意可以使用hashmap进行memorization
