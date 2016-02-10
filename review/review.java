@@ -1038,3 +1038,296 @@ There are two sorted arrays nums1 and nums2 of size m and n respectively. Find t
 basecase是：
 1. 有一个数组的start index超过上限，那么直接在第二个数组中找第k个就可以。
 2. k==1,返回两个数组从各自start index首元素调最小的即可
+
+
+
+
+331. Verify Preorder Serialization of a Binary Tree
+
+
+1. using indegree and outdegree:
+all non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root
+all null node provides 0 outdegree and 1 indegree (0 child and 1 parent).
+
+public boolean isValidSerialization(String preorder) {
+    String[] nodes = preorder.split(",");
+    int diff = 1;
+    for (String node: nodes) {
+        if (--diff < 0) return false;
+        if (!node.equals("#")) diff += 2;
+    }
+    return diff == 0;
+}
+
+2. using stack:
+This is very simple problem if you use stacks. The key here is, when you see two consecutive "#" characters on stack, pop both of them and replace the topmost element on the stack with "#". 
+
+
+follow-up: 
+validate preorder for BST:
+1. Push to stack till you get higher element than the topmost element of the stack. [i.e. you keep pushing till you hit the leftmost leaf]
+2. If you find current value which is greater than the TOP of Stack, POP till you hit higher element, and also mark the last poped value, which is your variable (Left_Tree_Highest). This variable is used to check whether the order is correct or not.
+3. In all the steps, if you find current element lesser than Left_Tree_Highest, then your tree is not a Binary Search Tree and it should return “NO”.
+4. If all the element traversed, and you have not hit “NO”, means given sequence follows the Binary Search Tree rule.
+
+
+
+
+Read4 problem:
+
+https://segmentfault.com/a/1190000003794420
+
+
+
+
+
+130. Surrounded Regions My Submissions Question
+Total Accepted: 47271 Total Submissions: 301078 Difficulty: Medium
+Given a 2D board containing 'X' and 'O', capture all regions surrounded by 'X'.
+
+A region is captured by flipping all 'O's into 'X's in that surrounded region.
+
+此类题直接用另一种字符标记无法被包围的'O',剩下的'O'就是可以被标记的，这样翻转后再改回来即可
+
+
+273. Integer to English Words My Submissions Question
+Total Accepted: 11859 Total Submissions: 66189 Difficulty: Medium
+Convert a non-negative integer to its english words representation. Given input is guaranteed to be less than 231 - 1.
+
+For example,
+123 -> "One Hundred Twenty Three"
+12345 -> "Twelve Thousand Three Hundred Forty Five"
+1234567 -> "One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+
+
+public class Solution {
+    private final String[] belowTen = new String[] {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"};
+    private final String[] belowTwenty = new String[] {"Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+    private final String[] belowHundred = new String[] {"", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
+
+    public String numberToWords(int num) {
+        if (num == 0) return "Zero";
+        return helper(num); 
+    }
+
+    private String helper(int num) {
+        String result = new String();
+        if (num < 10) result = belowTen[num];
+        else if (num < 20) result = belowTwenty[num -10];
+        else if (num < 100) result = belowHundred[num/10] + " " + helper(num % 10);
+        else if (num < 1000) result = helper(num/100) + " Hundred " +  helper(num % 100);
+        else if (num < 1000000) result = helper(num/1000) + " Thousand " +  helper(num % 1000);
+        else if (num < 1000000000) result = helper(num/1000000) + " Million " +  helper(num % 1000000);
+        else result = helper(num/1000000000) + " Billion " + helper(num % 1000000000);
+        return result.trim();
+    }
+}//先/后%
+
+
+
+
+
+
+
+179. Largest Number My Submissions Question
+Total Accepted: 38970 Total Submissions: 215130 Difficulty: Medium
+Given a list of non negative integers, arrange them such that they form the largest number.
+
+For example, given [3, 30, 34, 5, 9], the largest formed number is 9534330.
+
+自己重写comparator，然后sort即可
+
+
+
+
+224. Basic Calculator My Submissions Question
+Total Accepted: 22319 Total Submissions: 107209 Difficulty: Medium
+Implement a basic calculator to evaluate a simple expression string.
+
+The expression string may contain open ( and closing parentheses ), the plus + or minus sign -, non-negative integers and empty spaces .
+
+You may assume that the given expression is always valid.
+
+Some examples:
+"1 + 1" = 2
+" 2-1 + 2 " = 3
+"(1+(4+5+2)-3)+(6+8)" = 23
+
+stack只push当前计算所得的结果，不push计算符号，记得也要保存正负号
+对于（），记得保存两个符号，针对"-(-3+1)"这种情况，第一个符号可以将-1推入到stack中
+
+
+
+
+54. Spiral Matrix My Submissions Question
+Total Accepted: 51311 Total Submissions: 233992 Difficulty: Medium
+Given a matrix of m x n elements (m rows, n columns), return all elements of the matrix in spiral order.
+
+For example,
+Given the following matrix:
+
+[
+ [ 1, 2, 3 ],
+ [ 4, 5, 6 ],
+ [ 7, 8, 9 ]
+]
+You should return [1,2,3,6,9,8,7,4,5].
+
+This is a very simple and easy to understand solution. I traverse right and increment rowBegin, then traverse down and decrement colEnd, then I traverse left and decrement rowEnd, and finally I traverse up and increment colBegin.
+通过上面四个变量控制每次行进的方向，注意后两个travesal的时候需要先检查
+
+
+
+
+
+5. Longest Palindromic Substring My Submissions Question
+Total Accepted: 92054 Total Submissions: 413111 Difficulty: Medium
+Given a string S, find the longest palindromic substring in S. You may assume that the maximum length of S is 1000, and there exists one unique longest palindromic substring.
+
+分两种情况grow palindrome， 然后维持最大值
+
+
+
+43. Multiply Strings My Submissions Question
+Total Accepted: 53290 Total Submissions: 235571 Difficulty: Medium
+Given two numbers represented as strings, return multiplication of the numbers as a string.
+
+大数乘法，维持一个len1+len2长度的数组，将对位乘积之和放入，代表该位上的数，最后遍历一遍考虑进位和corner case即可
+
+
+
+93. Restore IP Addresses My Submissions Question
+Total Accepted: 50174 Total Submissions: 221465 Difficulty: Medium
+Given a string containing only digits, restore it by returning all possible valid IP address combinations.
+
+For example:
+Given "25525511135",
+
+return ["255.255.11.135", "255.255.111.35"]. (Order does not matter)
+
+穷举所有可能插入.的位置，然后函数判断是否合法。
+
+
+
+
+
+316. Remove Duplicate Letters My Submissions Question
+Total Accepted: 7727 Total Submissions: 32885 Difficulty: Medium
+Given a string which contains only lowercase letters, remove duplicate letters so that every letter appear once and only once. You must make sure your result is the smallest in lexicographical order among all possible results.
+
+Example:
+Given "bcabc"
+Return "abc"
+
+Given "cbacdcbc"
+Return "acdb"
+
+递归解决，每次处理一个字母，找到第一个该处字母是最后一次出现的位置。然后从这之前的substring中选一个字母作为此次循环确定的字母，输出并替换掉后面所有的该字母，
+进入下一次递归
+
+
+
+
+
+
+
+
+222. Count Complete Tree Nodes My Submissions Question
+Total Accepted: 26598 Total Submissions: 110945 Difficulty: Medium
+Given a complete binary tree, count the number of nodes.
+
+Definition of a complete binary tree from Wikipedia:
+In a complete binary tree every level, except possibly the last, is completely filled, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
+
+
+The height of a tree can be found by just going left. Let a single node tree have height 0. Find the height h of the whole tree. If the whole tree is empty, i.e., has height -1, there are 0 nodes.
+
+Otherwise check whether the height of the right subtree is just one less than that of the whole tree, meaning left and right subtree have the same height.
+
+If yes, then the last node on the last tree row is in the right subtree and the left subtree is a full tree of height h-1. So we take the 2^h-1 nodes of the left subtree plus the 1 root node plus recursively the number of nodes in the right subtree.
+If no, then the last node on the last tree row is in the left subtree and the right subtree is a full tree of height h-2. So we take the 2^(h-1)-1 nodes of the right subtree plus the 1 root node plus recursively the number of nodes in the left subtree.
+Since I halve the tree in every recursive step, I have O(log(n)) steps. Finding a height costs O(log(n)). So overall O(log(n)^2).
+就是找最后一行结束的node在当前节点左子树中还是右子树中，以确定哪一个子树是full可以直接计算节点数了
+
+
+
+
+
+
+
+
+60. Permutation Sequence My Submissions Question
+Total Accepted: 48324 Total Submissions: 197975 Difficulty: Medium
+The set [1,2,3,…,n] contains a total of n! unique permutations.
+
+By listing and labeling all of the permutations in order,
+We get the following sequence (ie, for n = 3):
+
+"123"
+"132"
+"213"
+"231"
+"312"
+"321"
+Given n and k, return the kth permutation sequence.
+
+
+注意此处是permutation，不是组合combination，此类题先简历factorial数组，然后fact数组确定每一位上的数，第i位剩下i-1位数那么总排列数为
+fact[i-1]
+注意如果k从0开始的话，需要k--;
+
+
+
+
+
+
+69. Sqrt(x) My Submissions Question
+Total Accepted: 83043 Total Submissions: 336425 Difficulty: Medium
+Implement int sqrt(int x).
+
+Compute and return the square root of x.
+
+
+二分法找，注意点是如果mid^2<=x的时候，不能直接left=mid+1,因为此时mid可能就是所求，需要进一步对比(mid+1)^2是否<=x
+
+
+
+
+
+
+
+310. Minimum Height Trees My Submissions Question
+Total Accepted: 6675 Total Submissions: 25926 Difficulty: Medium
+For a undirected graph with tree characteristics, we can choose any node as the root. The result graph is then a rooted tree. Among all possible rooted trees, those with minimum height are called minimum height trees (MHTs). Given such a graph, write a function to find all the MHTs and return a list of their root labels.
+
+Format
+The graph contains n nodes which are labeled from 0 to n - 1. You will be given the number n and a list of undirected edges (each edge is a pair of labels).
+
+You can assume that no duplicate edges will appear in edges. Since all edges are undirected, [0, 1] is the same as [1, 0] and thus will not appear together in edges.
+
+Example 1:
+
+Given n = 4, edges = [[1, 0], [1, 2], [1, 3]]
+
+        0
+        |
+        1
+       / \
+      2   3
+return [1]
+
+Example 2:
+
+Given n = 6, edges = [[0, 3], [1, 3], [2, 3], [4, 3], [5, 4]]
+
+     0  1  2
+      \ | /
+        3
+        |
+        4
+        |
+        5
+return [3, 4]
+
+
+最多只有两个root，首先找到叶子节点（邻居只有一个的），然后向内遍历（将叶子的邻居去掉叶子，然后看去掉后的邻居数是否为1，是则为新的叶子），直到剩下少于3个及节点
