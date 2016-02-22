@@ -177,6 +177,7 @@ wordbreak|判断是否breakable，使用dp，dp[i]=dict.contains(substring(j,i))
 或者对dict中的词语遍历，向后构建dp
 wordbreak||, 最简单方法使用递归，注意两点，先确认从后向前的某一个后缀存在dict中，以免递归半天发现最后无法break，
 其二是别忘了最后return list的时候判断整体字符是否存在list中。
+如果只求一种break方案，可以在|的dp数组基础上，从后向前扫，遇到substring存在且dp==true的情况就可以break一下。
 
 
 
@@ -872,7 +873,8 @@ Return 0.
 greedy:
 第一想法是存hashmap，把能加到的数存起来，然后从小到大补漏，补得同时更新能加到的数。
 更好的方法是greedy，类似max leap，扫数组并维持能到达的最大边界。如果数组元素小于该边界那么不添加元素，只更新新的最大边界（+currentnum)，如果数组元素大于该边界，
-那么意味着要增加该边界+1这个数，同时边界*2.  最大边界达到所求之上的时候返回count即可
+那么意味着要增加该边界+1这个数，同时边界*2(因为需要加一个数，小于边界的加进去浪费，大于边界的加进去会产生到达不了的空档，所以加进去的数选边界为最佳.
+  最大边界达到所求之上的时候返回count即可
 
 
 
@@ -1076,7 +1078,13 @@ validate preorder for BST:
 Read4 problem:
 
 https://segmentfault.com/a/1190000003794420
+|：
+1. 每次读到的len，拷贝到result数组中时，需要判断拷贝长度为min{len(此次读到的),n-i(还需要的)}
+2. 每次循环，如果len<4（已经读完文件）， 那么需要判断返回的长度是min{i+len(直到读完也没有达到要求读的n字节),n(读到多于n的字节)}，对应上面的两种情况
+注意1，2单独判断。
 
+||:
+在1的情况中，如果取得是n-i(即len>n-i),那么把剩下的放到queueu里，每次使用先poll queue
 
 
 
@@ -1156,6 +1164,20 @@ Some examples:
 stack只push当前计算所得的结果，不push计算符号，记得也要保存正负号
 对于（），记得保存两个符号，针对"-(-3+1)"这种情况，第一个符号可以将-1推入到stack中
 
+follow up: 
+加上四则运算和（）: 
+1. 转换成逆波兰表达式
+2. 计算
+
+转换成逆波兰表达式方法：
+维持一个stack存符号，一个list存最后结果，
+如果token是数字，直接压入list
+如果token是非')'的运算符:
+    1. 是"*""/"(运算级别高的）:直接压入stack
+    2. 是"+""-"(运算级别低的) : 持续将stack中符号push到list中直到遇到"("或运算级别更低的
+若果token是')'，持续将stack中元素pop到list中，直到遇到第一个'('，注意（）不能加入list
+
+结束遍历后，将stack中剩下的符号压入list，搞定
 
 
 
@@ -1272,7 +1294,7 @@ We get the following sequence (ie, for n = 3):
 Given n and k, return the kth permutation sequence.
 
 
-注意此处是permutation，不是组合combination，此类题先简历factorial数组，然后fact数组确定每一位上的数，第i位剩下i-1位数那么总排列数为
+注意此处是permutation，不是组合combination，此类题先建立factorial数组，然后fact数组确定每一位上的数，第i位剩下i-1位数那么总排列数为
 fact[i-1]
 注意如果k从0开始的话，需要k--;
 
@@ -1576,3 +1598,9 @@ Input: "2*3-4*5"
 Output: [-34, -14, -10, -10, 10]
 
 不需要把所有可能式子列出来，只需要以运算符号为分隔（即意味着在其两边加括号，为一种加括号方式），分别计算两边表达式可能结果，然后进行组合即可。注意可以使用hashmap进行memorization
+
+
+
+
+
+
